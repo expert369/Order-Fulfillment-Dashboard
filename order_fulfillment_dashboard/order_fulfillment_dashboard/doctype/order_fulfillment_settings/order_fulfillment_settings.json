@@ -1,0 +1,74 @@
+{
+ "actions": [],
+ "creation": "2026-08-10 11:30:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_0",
+  "woocommerce_url",
+  "consumer_key",
+  "consumer_secret",
+  "api_path",
+  "enabled"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_0",
+   "fieldtype": "Section Break",
+   "label": "WooCommerce Integration",
+   "collapsible": 0
+  },
+  {
+   "fieldname": "woocommerce_url",
+   "fieldtype": "Data",
+   "label": "WooCommerce URL",
+   "placeholder": "",
+   "description": "Base URL of the WooCommerce website. Required when the integration is enabled."
+  },
+  {
+   "fieldname": "consumer_key",
+   "fieldtype": "Password",
+   "label": "Consumer Key",
+   "description": "WooCommerce API consumer key. Stored encrypted and never exposed to the browser."
+  },
+  {
+   "fieldname": "consumer_secret",
+   "fieldtype": "Password",
+   "label": "Consumer Secret",
+   "description": "WooCommerce API consumer secret. Stored encrypted and never exposed to the browser."
+  },
+  {
+   "fieldname": "api_path",
+   "fieldtype": "Data",
+   "label": "API Path",
+   "placeholder": "/wp-json/qgc-erp/v1/order-fulfillment",
+   "description": "REST API path for order fulfillment. Must start with a forward slash."
+  },
+  {
+   "default": "0",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled",
+   "description": "Enable the WooCommerce order fulfillment integration."
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-08-10 11:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Order Fulfillment Dashboard",
+ "name": "Order Fulfillment Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 0
+}
