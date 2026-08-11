@@ -71,7 +71,7 @@ export function Sidebar({ className }: SidebarProps) {
 
   return (
     <aside className={cn('w-full h-full', 'lg:w-[20%] lg:min-w-[240px] lg:max-w-[320px] lg:flex-shrink-0', className)}>
-      <GlassPanel variant="primary" className="flex h-full flex-col p-4">
+      <GlassPanel variant="primary" className="flex h-full flex-col p-4 rounded-l-xs">
         <div className="mb-6 border-b border-glass-border pb-4">
           <div className="flex items-center gap-2.5">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-brand/30 bg-brand-soft">
