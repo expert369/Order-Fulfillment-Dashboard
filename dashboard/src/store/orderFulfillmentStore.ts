@@ -34,7 +34,7 @@ export const useOrderFulfillmentStore = create<StoreState>((set, get) => ({
   loading: false,
   error: null,
   lastUpdated: null,
-  autoRefresh: true,
+  autoRefresh: false,
   sidebarOpen: false,
 
   setSelectedPhase: (phase) => set({ selectedPhase: phase }),

@@ -19,9 +19,15 @@ def get_orders():
 	customer_map = customer_lookup.resolve_customers([order.get("order_id") for order in orders])
 
 	normalized_orders = []
+	print('\n\n\n\n\n', orders)
 	for order in orders:
+		# get sales order no
+		cur_order_id = cstr(order.get("order_id"))
+		so_order_no = frappe.db.get_value("Sales Order", { "custom_woo_job_order_no": cur_order_id }, "name") or ""
+  
 		normalized = _normalize_order(order)
 		normalized["customer"] = customer_map.get(cstr(order.get("order_id")))
+		normalized["so_order_no"] = so_order_no
 		normalized_orders.append(normalized)
   
 	return {

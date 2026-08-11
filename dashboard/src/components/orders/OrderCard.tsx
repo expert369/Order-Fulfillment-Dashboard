@@ -47,6 +47,9 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
           <span className="block truncate font-mono text-lg font-semibold text-ink-strong">
             #{order.order_id}
           </span>
+          <span className="block font-mono font-semibold text-sm text-ink-strong">
+            {order.so_order_no && `SO${order.so_order_no}`}
+          </span>
         </div>
         <PhaseBadge phase={order.current_phase} size="sm" />
       </div>
@@ -66,10 +69,6 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
         <div className="min-w-0">
           <p className="text-xs uppercase tracking-wider text-ink-faint">Created</p>
           <p className="truncate font-mono text-sm text-ink">{formatDate(order.created_at)}</p>
-        </div>
-        <div className="shrink-0 text-right">
-          <p className="text-xs uppercase tracking-wider text-ink-faint">Age</p>
-          <p className="font-mono text-sm text-ink-muted">{relativeTime}</p>
         </div>
       </div>
     </GlassCard>

@@ -14,6 +14,7 @@ export interface Customer {
 export interface Order {
   id: string;
   order_id: number;
+  so_order_no: string;
   current_phase: Phase;
   created_at: string;
   customer: Customer | null;

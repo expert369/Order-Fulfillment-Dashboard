@@ -86,8 +86,6 @@ def _extract_order_list(response_data):
     if isinstance(response_data, list):
         return response_data
 
-    print("response_data", response_data)
-
     if isinstance(response_data, dict):
         for key in ("orders", "data", "results", "rows"):
             value = response_data.get(key)
