@@ -5,4 +5,6 @@
 tags
 node_modules
 __pycache__
-order_fulfillment_dashboard/public/order_fulfillment/assets/*
+order_fulfillment_dashboard/public/order_fulfillment/*
+order_fulfillment_dashboard/www/order_fulfillment.html
+order_fulfillment_dashboard/public/order_fulfillment/index.html

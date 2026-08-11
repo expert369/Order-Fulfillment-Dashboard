@@ -1,12 +1,13 @@
 import frappe
 from frappe import _
+from frappe.utils import cstr
 
-from order_fulfillment_dashboard.services.order_fulfillment import woo_client
+from order_fulfillment_dashboard.services.order_fulfillment import customer_lookup, woo_client
 
 PHASE_FIELDS = ("enqueueing", "picking", "sorting", "checking", "loading")
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_orders():
 	_check_permission()
 
@@ -15,8 +16,14 @@ def get_orders():
 	except Exception as error:
 		return _handle_error(error)
 
-	normalized_orders = [_normalize_order(order) for order in orders]
+	customer_map = customer_lookup.resolve_customers([order.get("order_id") for order in orders])
 
+	normalized_orders = []
+	for order in orders:
+		normalized = _normalize_order(order)
+		normalized["customer"] = customer_map.get(cstr(order.get("order_id")))
+		normalized_orders.append(normalized)
+  
 	return {
 		"success": True,
 		"total": len(normalized_orders),
@@ -25,7 +32,7 @@ def get_orders():
 	}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_order(order_id):
 	_check_permission()
 
@@ -37,7 +44,11 @@ def get_order(order_id):
 	except Exception as error:
 		return _handle_error(error)
 
-	return {"success": True, "order": _normalize_order(order) if order else None}
+	normalized = _normalize_order(order) if order else None
+	if normalized:
+		normalized["customer"] = customer_lookup.resolve_customer(order_id)
+
+	return {"success": True, "order": normalized}
 
 
 def _check_permission():

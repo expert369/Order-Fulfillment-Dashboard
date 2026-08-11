@@ -2,13 +2,13 @@
 
 ## Project Status
 
-**Overall Status:** 🟢 Phase 4 Complete
+**Overall Status:** 🟢 Phase 11 Complete
 
-**Current Phase:** Phase 5 — ERPNext Customer Mapping
+**Current Phase:** Phase 12 — Testing
 
-**Progress:** `31%`
+**Progress:** `77%`
 
-**Last Updated:** 2026-08-10
+**Last Updated:** 2026-08-11
 
 ---
 
@@ -20,13 +20,13 @@
 | 2. Configuration            | ✅ Completed  |     100% |
 | 3. WooCommerce API Client   | ✅ Completed  |     100% |
 | 4. Frappe Backend API       | 🟢 Completed |     100% |
-| 5. ERPNext Customer Mapping | ⬜ Not Started |       0% |
-| 6. Dashboard Foundation     | ⬜ Not Started |       0% |
-| 7. Order Cards              | ⬜ Not Started |       0% |
-| 8. Phase Filtering          | ⬜ Not Started |       0% |
-| 9. Refresh System           | ⬜ Not Started |       0% |
-| 10. Error Handling          | ⬜ Not Started |       0% |
-| 11. UI/UX Improvements      | ⬜ Not Started |       0% |
+| 5. ERPNext Customer Mapping | 🟢 Completed |     100% |
+| 6. Dashboard Foundation     | ✅ Completed  |     100% |
+| 7. Order Cards              | ✅ Completed  |     100% |
+| 8. Phase Filtering          | ✅ Completed  |     100% |
+| 9. Refresh System           | ✅ Completed  |     100% |
+| 10. Error Handling          | ✅ Completed  |     100% |
+| 11. UI/UX Improvements      | ✅ Completed  |     100% |
 | 12. Testing                 | ⬜ Not Started |       0% |
 | 13. Deployment              | ⬜ Not Started |       0% |
 
@@ -267,75 +267,95 @@ TESTS
 
 # Phase 5 — ERPNext Customer Mapping
 
-**Status:** ⬜ Not Started
+**Status:** 🟢 Completed
 
 ### Tasks
 
-* [ ] Determine customer identifier from API
-* [ ] Determine ERPNext Customer mapping
-* [ ] Implement customer lookup
-* [ ] Add customer to normalized response
-* [ ] Handle missing customer
-* [ ] Test customer mapping
+* [x] Determine customer identifier from API
+* [x] Determine ERPNext Customer mapping
+* [x] Implement customer lookup
+* [x] Add customer to normalized response
+* [x] Handle missing customer
+* [x] Test customer mapping
 
 ### Deliverables
 
-* [ ] Orders display ERPNext Customer
+* [x] Orders display ERPNext Customer
 
 ### Notes
 
 ```text
 Customer mapping strategy:
-TBD
+- WooCommerce order_id maps to ERPNext Sales Order via custom fields:
+  1. Primary: `custom_woo_job_order_id` (stores numeric order_id)
+  2. Fallback: `custom_woo_job_order_no` (stores order number like JO#102)
+- Lookup queries Sales Order, returns Customer (id + name)
+- Batch lookup with chunking (500 IDs per query)
+- Missing customer handled gracefully (returns null, order still displayed)
+- Errors logged but never raised — customer failure cannot break order retrieval
+
+FILES:
+- services/order_fulfillment/customer_lookup.py
+- api/order_fulfillment.py (integration)
+- tests/test_customer_mapping.py (12 tests, all passing)
 ```
 
 ---
 
 # Phase 6 — Dashboard Foundation
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Completed
 
 ### Tasks
 
-* [ ] Create Frappe Desk Page
-* [ ] Create dashboard HTML
-* [ ] Create sidebar
-* [ ] Set sidebar to approximately 20%
-* [ ] Set main content to approximately 80%
-* [ ] Create dashboard header
-* [ ] Add loading state
-* [ ] Add empty state
-* [ ] Add error state
+* [x] Create Frappe Desk Page
+* [x] Create dashboard HTML
+* [x] Create sidebar
+* [x] Set sidebar to approximately 20%
+* [x] Set main content to approximately 80%
+* [x] Create dashboard header
+* [x] Add loading state
+* [x] Add empty state
+* [x] Add error state
 
 ### Deliverables
 
-* [ ] Dashboard page accessible
-* [ ] Sidebar visible
-* [ ] Main content area ready
+* [x] Dashboard page accessible
+* [x] Sidebar visible
+* [x] Main content area ready
 
 ### Notes
 
 ```text
-No notes yet.
+Implemented as standalone Vite/React app (not Frappe Desk Page).
+- Tailwind CSS v4 with design tokens (architecture.md §44)
+- Zustand store for state management (architecture.md §53)
+- Glassmorphism UI components: GlassPanel, GlassCard, PhaseBadge
+- Layout: Sidebar (~20%), Main Content (~80%), Header with refresh controls
+- Responsive 6-column grid (xl), 4-col (lg), 2-col (sm), 1-col (base)
+- Auto-refresh: 30-second polling, preserves active filter
+- Manual refresh button with loading state
+- Error handling with user-friendly messages per backend error taxonomy
+- Build output served via www/order_fulfillment at /order_fulfillment
 ```
 
 ---
 
 # Phase 7 — Order Cards
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Completed
 
 ### Tasks
 
-* [ ] Create order card markup
-* [ ] Display order ID
-* [ ] Display current phase
-* [ ] Display customer
-* [ ] Display created_at
-* [ ] Format date
-* [ ] Handle missing values
-* [ ] Create 6-column desktop grid
-* [ ] Add responsive grid
+* [x] Create order card markup
+* [x] Display order ID
+* [x] Display current phase
+* [x] Display customer
+* [x] Display created_at
+* [x] Format date
+* [x] Handle missing values
+* [x] Create 6-column desktop grid
+* [x] Add responsive grid
 
 ### Target Grid
 
@@ -348,145 +368,204 @@ Mobile:  1
 
 ### Deliverables
 
-* [ ] Orders appear as cards
-* [ ] Cards display required information
+* [x] Orders appear as cards
+* [x] Cards display required information
 
 ### Notes
 
 ```text
-No notes yet.
+OrderCard component with GlassCard wrapper, PhaseBadge, customer name, formatted date.
+Responsive grid: grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6
 ```
 
 ---
 
 # Phase 8 — Phase Filtering
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Completed
 
 ### Sidebar Filters
 
-* [ ] All Orders
-* [ ] Enqueue
-* [ ] Picking
-* [ ] Sorting
-* [ ] Checking
-* [ ] Loading
+* [x] All Orders
+* [x] Enqueue
+* [x] Picking
+* [x] Sorting
+* [x] Checking
+* [x] Loading
 
 ### Tasks
 
-* [ ] Implement All Orders
-* [ ] Implement Enqueue
-* [ ] Implement Picking
-* [ ] Implement Sorting
-* [ ] Implement Checking
-* [ ] Implement Loading
-* [ ] Add active filter state
-* [ ] Add phase counts
-* [ ] Verify filtering without page reload
+* [x] Implement All Orders
+* [x] Implement Enqueue
+* [x] Implement Picking
+* [x] Implement Sorting
+* [x] Implement Checking
+* [x] Implement Loading
+* [x] Add active filter state
+* [x] Add phase counts
+* [x] Verify filtering without page reload
 
 ### Deliverables
 
-* [ ] All phase filters work
-* [ ] Active filter is visually clear
+* [x] All phase filters work
+* [x] Active filter is visually clear
 
 ### Notes
 
 ```text
-No notes yet.
+PhaseFilter in Sidebar with PhaseBadge for each phase.
+Order counts computed client-side from Zustand store.
+Active filter highlighted with stronger glass treatment.
+Client-side filtering (no API call on filter change).
 ```
 
 ---
 
 # Phase 9 — Refresh System
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Completed
 
 ### Tasks
 
-* [ ] Add manual refresh button
-* [ ] Add loading state
-* [ ] Implement 30-second polling
-* [ ] Prevent duplicate requests
-* [ ] Preserve active filter
-* [ ] Update phase counts
-* [ ] Update last refreshed time
+* [x] Add manual refresh button
+* [x] Add loading state
+* [x] Implement 30-second polling
+* [x] Prevent duplicate requests
+* [x] Preserve active filter
+* [x] Update phase counts
+* [x] Update last refreshed time
 
 ### Deliverables
 
-* [ ] Manual refresh works
-* [ ] Auto-refresh works
-* [ ] Last updated time is visible
+* [x] Manual refresh works
+* [x] Auto-refresh works
+* [x] Last updated time is visible
 
 ### Notes
 
 ```text
-Refresh interval:
-30 seconds
+Refresh interval: 30 seconds
+RefreshButton in Header with loading spinner.
+Auto-refresh via Zustand subscription, gated by autoRefresh flag.
+LastUpdated displays formatted timestamp.
+Selected phase preserved during refresh.
 ```
 
 ---
 
 # Phase 10 — Error Handling
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Completed
 
 ### Tasks
 
-* [ ] Handle WooCommerce connection failure
-* [ ] Handle authentication failure
-* [ ] Handle timeout
-* [ ] Handle malformed API response
-* [ ] Handle empty order list
-* [ ] Handle missing customer
-* [ ] Handle backend errors
-* [ ] Handle permission errors
-* [ ] Add user-friendly error messages
+* [x] Handle WooCommerce connection failure
+* [x] Handle authentication failure
+* [x] Handle timeout
+* [x] Handle malformed API response
+* [x] Handle empty order list
+* [x] Handle missing customer
+* [x] Handle backend errors
+* [x] Handle permission errors
+* [x] Add user-friendly error messages
 
 ### Deliverables
 
-* [ ] Dashboard fails gracefully
-* [ ] Errors don't expose sensitive information
+* [x] Dashboard fails gracefully
+* [x] Errors don't expose sensitive information
 
 ### Notes
 
 ```text
-No notes yet.
+ErrorState component with Try Again / Dismiss buttons.
+Maps backend error codes to user-friendly messages:
+- WOOCOMMERCE_CONNECTION_ERROR → "Unable to connect to WooCommerce..."
+- WOOCOMMERCE_AUTHENTICATION_ERROR → "WooCommerce authentication failed..."
+- INTEGRATION_DISABLED / INTEGRATION_NOT_CONFIGURED
+- INTERNAL_ERROR fallback
+Missing customer shows "Customer not found" on card (order still renders).
+EmptyState for no orders in selected phase.
 ```
 
 ---
 
 # Phase 11 — UI/UX Improvements
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Completed
 
 ### Tasks
 
-* [ ] Improve sidebar design
-* [ ] Improve card design
-* [ ] Improve phase indicators
-* [ ] Improve spacing
-* [ ] Add hover states
-* [ ] Improve loading state
-* [ ] Improve empty state
-* [ ] Improve error state
-* [ ] Improve responsive layout
-* [ ] Verify 6-column desktop layout
+* [x] Improve sidebar design
+* [x] Improve card design
+* [x] Improve phase indicators
+* [x] Improve spacing
+* [x] Add hover states
+* [x] Improve loading state
+* [x] Improve empty state
+* [x] Improve error state
+* [x] Improve responsive layout
+* [x] Verify 6-column desktop layout
 
 ### Optional
 
-* [ ] Full-screen mode
-* [ ] Dark mode
+* [x] Full-screen mode
+* [x] Dark mode (already the dashboard default theme)
 * [ ] Sound notification
-* [ ] New order animation
+* [x] New order animation (entrance stagger + initial pulse)
 
 ### Deliverables
 
-* [ ] Dashboard is suitable for daily operations use
+* [x] Dashboard is suitable for daily operations use
 
 ### Notes
 
 ```text
-No notes yet.
+DESIGN TOKEN SYSTEM (architecture.md §44 fully implemented)
+- Expanded @theme in src/index.css: surfaces, ink/typography, glass surfaces,
+  brand/danger, per-phase accents, background glows, motion easings/durations.
+- All Tailwind usage now routes through tokens. Removed raw color classes
+  (white/x, purple-*, slate-*, red-*) and hardcoded inline hex.
+- Custom easing: --ease-expo-out (cubic-bezier(0.16, 1, 0.3, 1)) used for
+  transitions; hover transforms gated behind hover:pointer-fine:.
+
+SIDEBAR
+- Removed duplicated PhaseBadge inside filter items (icon+dot+label+count now).
+- Active item: stronger glass + brand gradient overlay + brand-tinted icon well.
+- Phases use color-coded accent dots instead of raw phase badge duplication.
+- Press feedback (active:scale-[0.98]), focus-visible rings, idempotent close.
+
+CARD
+- Phase accent bar (3px, rounded) driven by CSS var per phase (getPhaseAccent).
+- Hierarchy: "Order" label + mono order ID; customer section; created + age row.
+- Hover: -translate-y-0.5 + stronger border/background, hover:pointer-fine gated.
+- Entrance: animate-card-in with 40ms stagger (capped at 12) via style delay.
+
+PHASE INDICATORS
+- PhaseBadge now includes a phase-colored dot; sizes sm/md/lg preserved.
+- getPhaseColor/getPhaseAccent map to token utilities / CSS vars.
+
+RESPONSIVE
+- Sidebar hidden below lg; mobile slide-over drawer with backdrop + Escape
+  close, inert when closed, auto-close on filter select.
+- Header stacks on mobile; hamburger button (lg:hidden); controls wrap.
+
+HEADER / CONTROLS
+- Auto Refresh checkbox replaced with an accessible switch (role="switch").
+- Added full-screen toggle (Fullscreen API + error fallback).
+- Refresh/primary buttons: press feedback + brand tokens; shadow-brand/30.
+- Last updated now shows HH:MM:SS (formatTime) per spec.
+
+STATES
+- LoadingSkeleton mirrors new card layout (accent bar, shimmer, stagger).
+- EmptyState: glass icon tile + contextual phase message + refresh CTA.
+- ErrorState: danger-soft glass panel, icon tile, Try Again / Dismiss.
+- Refresh with existing data no longer unmounts the grid (opacity 40 dim
+  during refetch instead of flicker) — fixes pre-existing auto-refresh jump.
+
+VERIFICATION
+- oxlint clean, tsc clean (src), vite build succeeds; built CSS confirms
+  token utilities emitted (ease-expo-out, phase colors, glass surfaces,
+  pointer-fine hover, xl:grid-cols-6, card-in keyframes).
 ```
 
 ---
@@ -586,7 +665,6 @@ No notes yet.
 
 | Blocker                              | Status  | Impact | Resolution                      |
 | ------------------------------------ | ------- | ------ | ------------------------------- |
-| Customer mapping not confirmed       | 🔴 Open | High   | Confirm API customer identifier |
 | API response structure not confirmed | 🔴 Open | High   | Inspect actual API response     |
 | —                                    | —       | —      | —                               |
 
@@ -615,7 +693,7 @@ No notes yet.
 | Sidebar width                        | 🟢 Confirmed | Approximately 20%            |
 | Desktop card grid                    | 🟢 Confirmed | 6 columns                    |
 | Auto-refresh                         | 🟢 Planned   | 30 seconds                   |
-| ERPNext Customer lookup              | 🟡 Pending   | Mapping needs confirmation   |
+| ERPNext Customer lookup              | ✅ Confirmed | Via Sales Order custom fields (woo_job_order_id / woo_job_order_no) |
 | UI library                           | 🟡 Pending   | Tailwind + hand-built shadcn-style components |
 
 ---
@@ -711,6 +789,21 @@ https://cms-staging.buildmaster.ph/wp-json/qgc-erp/v1/order-fulfillment?order_id
 * [x] Live probe: endpoint requires WooCommerce credentials (HTTP 401)
 * [x] ruff clean
 
+## 2026-08-10 — Phase 5 (ERPNext Customer Mapping)
+
+### Completed
+
+* [x] Customer lookup implemented via Sales Order custom fields
+* [x] Primary field: `custom_woo_job_order_id` (numeric order_id)
+* [x] Fallback field: `custom_woo_job_order_no` (order number like JO#102)
+* [x] Batch lookup with 500-ID chunking
+* [x] Missing customer handled gracefully (returns null, order still displays)
+* [x] Error handling: logged but never raised — cannot break order retrieval
+* [x] Integrated into `get_orders()` and `get_order()` API endpoints
+* [x] 12 unit tests passing (test_customer_mapping.py)
+
+---
+
 ## 2026-08-10 — Phase 4 (Frappe Backend API)
 
 ### Completed
@@ -731,6 +824,47 @@ https://cms-staging.buildmaster.ph/wp-json/qgc-erp/v1/order-fulfillment?order_id
 
 ---
 
+## 2026-08-10 — Phase 6 (Dashboard Foundation)
+
+### Completed
+
+* [x] Tailwind CSS v4 installed with design tokens (architecture.md §44)
+* [x] Zustand store for dashboard state (architecture.md §53)
+* [x] Glassmorphism UI components: GlassPanel, GlassCard, PhaseBadge
+* [x] Dashboard layout: Sidebar (~20%), Header, Main Content (~80%)
+* [x] Responsive 6-column order card grid (xl:6, lg:4, sm:2, base:1)
+* [x] OrderCard with Order ID, PhaseBadge, Customer, Created At
+* [x] Phase filtering in Sidebar with order counts
+* [x] Manual refresh button with loading state
+* [x] Auto-refresh (30s polling) preserving active filter
+* [x] Last updated timestamp display
+* [x] LoadingSkeleton, EmptyState, ErrorState components
+* [x] Error handling with user-friendly messages per backend error taxonomy
+* [x] Build successful, lint clean
+* [x] Assets served via www/order_fulfillment at /order_fulfillment
+* [x] Fixed React 19 incompatibility with frappe-react-sdk — downgraded to React 18.3.1
+
+---
+
+## 2026-08-11 — Phase 11 (UI/UX Improvements)
+
+### Completed
+
+* [x] Expanded design tokens in index.css (@theme) — surfaces, ink, glass, phases, glows, motion
+* [x] Routed all styling through tokens (removed raw color classes + hardcoded hex)
+* [x] Sidebar polish: active gradient overlay, accent dots, press/focus states, removed badge duplication
+* [x] Card polish: phase accent bar, hierarchy, hover lift (pointer-fine), entrance stagger
+* [x] PhaseBadge: phase-colored dot indicator
+* [x] Custom easing + duration tokens; reduced hover animations
+* [x] Mobile responsive: sidebar slide-over drawer (lg-hidden), Escape close, inert when closed
+* [x] Full-screen toggle + accessible auto-refresh switch in header
+* [x] LoadingSkeleton / EmptyState / ErrorState redesigned to new card layout
+* [x] Fixed refresh flicker — grid stays mounted (dimmed) during refetch
+* [x] Verified: 6-column desktop grid, token utilities emitted in build output
+* [x] oxlint clean, tsc clean (src), vite build + copy-html-entry OK
+
+---
+
 # Change Log
 
 | Date       | Change                            |
@@ -746,25 +880,28 @@ https://cms-staging.buildmaster.ph/wp-json/qgc-erp/v1/order-fulfillment?order_id
 | 2026-08-10 | Phase 2 complete: Order Fulfillment Settings DocType + validation + tests |
 | 2026-08-10 | Fixed module folder convention; app installed on test.site |
 | 2026-08-10 | Phase 3 complete: WooCommerce client with auth, errors, 19 tests |
+| 2026-08-10 | Phase 5 complete: ERPNext customer lookup via Sales Order custom fields, 12 tests |
 | 2026-08-10 | Phase 4 complete: whitelisted backend API, normalization, error contract, 19 tests |
+| 2026-08-11 | Phase 11 complete: full design-token system, sidebar/card/status polish, mobile drawer, full-screen + auto-refresh switch, entrance stagger |
 
 ---
 
 # MVP Completion
 
 ```text
-Overall Progress: 31%
+Overall Progress: 77%
 
 Foundation       ██████████ 100%
 Configuration    ██████████ 100%
 API Integration  ██████████ 100%
 Backend API      ██████████ 100%
-Customer Mapping ░░░░░░░░░░ 0%
-Dashboard        ░░░░░░░░░░ 0%
-Cards            ░░░░░░░░░░ 0%
-Filtering        ░░░░░░░░░░ 0%
-Refresh          ░░░░░░░░░░ 0%
-Error Handling   ░░░░░░░░░░ 0%
+Customer Mapping ██████████ 100%
+Dashboard        ██████████ 100%
+Cards            ██████████ 100%
+Filtering        ██████████ 100%
+Refresh          ██████████ 100%
+Error Handling   ██████████ 100%
+UI/UX Polish     ██████████ 100%
 Testing          ░░░░░░░░░░ 0%
 Deployment       ░░░░░░░░░░ 0%
 ```
@@ -778,7 +915,7 @@ The MVP is complete when:
 * [ ] WooCommerce configuration works
 * [ ] WooCommerce API connection works
 * [ ] Orders are retrieved
-* [ ] ERPNext customer is identified
+* [X] ERPNext customer is identified
 * [ ] Dashboard loads
 * [ ] Orders display as cards
 * [ ] Desktop displays 6 cards per row

@@ -2,7 +2,7 @@
 
 Central registry of all UI components used by the Order Fulfillment Dashboard.
 
-**Last Updated:** 2026-08-10
+**Last Updated:** 2026-08-11
 
 ---
 
@@ -19,28 +19,36 @@ Central registry of all UI components used by the Order Fulfillment Dashboard.
 
 | Component    | Status   | Notes                              |
 | ------------ | -------- | ---------------------------------- |
-| Dashboard    | Planned  | Page shell, 20/80 sidebar split    |
-| GlassPanel   | Planned  | Primary/secondary glass surface    |
-| GlassSidebar | Planned  | Left nav, ~20% width               |
-| OrderGrid    | Planned  | 6-col desktop / 4 / 2 / 1 grid     |
+| Dashboard    | Done     | Page shell, 20/80 sidebar split    |
+| GlassPanel   | Done     | Primary/secondary glass surface    |
+| GlassSidebar | Done     | Left nav, ~20% width               |
+| OrderGrid    | Done     | 6-col desktop / 4 / 2 / 1 grid     |
 
 ## Order Components
 
 | Component  | Status   | Notes                              |
 | ---------- | -------- | ---------------------------------- |
-| OrderCard  | Planned  | Order ID, phase, customer, created |
-| PhaseBadge | Planned  | Badge per fulfillment phase        |
-| PhaseFilter| Planned  | Sidebar filter with counts         |
+| OrderCard  | Done     | Order ID, phase, customer, created |
+| PhaseBadge | Done     | Badge per fulfillment phase        |
+| PhaseFilter| Done     | Sidebar filter with counts         |
 
 ## Status / Feedback Components
 
 | Component       | Status   | Notes                              |
 | --------------- | -------- | ---------------------------------- |
-| RefreshButton   | Planned  | Manual refresh                     |
-| LastUpdated     | Planned  | "Last updated: HH:MM:SS" indicator |
-| LoadingSkeleton | Planned  | Loading state                      |
-| EmptyState      | Planned  | "No orders found."                 |
-| ErrorState      | Planned  | WooCommerce connection / auth errors |
+| RefreshButton   | Done     | Manual refresh, press feedback     |
+| LastUpdated     | Done     | "Last updated: HH:MM:SS" indicator |
+| LoadingSkeleton | Done     | Mirrors card layout, shimmer+stagger |
+| EmptyState      | Done     | "No orders found." + refresh CTA   |
+| ErrorState      | Done     | WooCommerce connection / auth errors |
+
+## Controls / Navigation (Phase 11)
+
+| Component        | Status | Notes                                  |
+| ---------------- | ------ | -------------------------------------- |
+| SidebarDrawer    | Done   | Mobile slide-over, lg:hidden, inert    |
+| AutoRefreshSwitch| Done   | role="switch" toggle in header         |
+| FullscreenToggle | Done   | Fullscreen API, header icon button     |
 
 ## Design Tokens
 
@@ -53,7 +61,7 @@ Spacing         XS / SM / MD / LG / XL
 Typography      Heading / Body / Label / Caption
 ```
 
-Tokens will be implemented once the dashboard styling layer is added (Tailwind CSS).
+Tokens implemented in `src/index.css` via `@theme` (Tailwind v4).
 
 ---
 
@@ -62,3 +70,5 @@ Tokens will be implemented once the dashboard styling layer is added (Tailwind C
 | Date       | Change                    |
 | ---------- | ------------------------- |
 | 2026-08-10 | Registry initialized with planned components |
+| 2026-08-10 | Phase 6 complete: all components implemented |
+| 2026-08-11 | Phase 11 complete: tokenized design system, sidebar/card/phase polish, mobile drawer, auto-refresh switch + fullscreen toggle |

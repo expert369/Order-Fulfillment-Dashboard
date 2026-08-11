@@ -4,7 +4,7 @@ from unittest.mock import patch
 import frappe
 
 from order_fulfillment_dashboard.api import order_fulfillment
-from order_fulfillment_dashboard.services.order_fulfillment import woo_client
+from order_fulfillment_dashboard.services.order_fulfillment import customer_lookup, woo_client
 
 
 def sample_row(**overrides):
@@ -34,6 +34,13 @@ def sample_row(**overrides):
 
 
 class TestGetOrders(unittest.TestCase):
+	def setUp(self):
+		self.resolve_patcher = patch.object(customer_lookup, "resolve_customers", return_value={})
+		self.resolve_patcher.start()
+
+	def tearDown(self):
+		self.resolve_patcher.stop()
+
 	def test_returns_normalized_response(self):
 		with patch.object(woo_client, "get_orders", return_value=[sample_row()]):
 			result = order_fulfillment.get_orders()
@@ -96,8 +103,35 @@ class TestGetOrders(unittest.TestCase):
 		self.assertEqual(result["total"], 0)
 		self.assertEqual(result["count"], 0)
 
+	def test_attaches_customer_from_lookup(self):
+		with patch.object(woo_client, "get_orders", return_value=[sample_row()]):
+			with patch.object(
+				customer_lookup,
+				"resolve_customers",
+				return_value={"47375": {"id": "CUST-00001", "name": "ABC Construction"}},
+			):
+				result = order_fulfillment.get_orders()
+
+		order = result["orders"][0]
+		self.assertEqual(order["customer"], {"id": "CUST-00001", "name": "ABC Construction"})
+
+	def test_missing_customer_keeps_order(self):
+		with patch.object(woo_client, "get_orders", return_value=[sample_row()]):
+			result = order_fulfillment.get_orders()
+
+		order = result["orders"][0]
+		self.assertIsNone(order["customer"])
+		self.assertEqual(order["order_id"], 47375)
+
 
 class TestGetOrder(unittest.TestCase):
+	def setUp(self):
+		self.resolve_patcher = patch.object(customer_lookup, "resolve_customer", return_value=None)
+		self.resolve_patcher.start()
+
+	def tearDown(self):
+		self.resolve_patcher.stop()
+
 	def test_returns_normalized_order(self):
 		with patch.object(woo_client, "get_order", return_value=sample_row()):
 			result = order_fulfillment.get_order(47375)
@@ -124,6 +158,34 @@ class TestGetOrder(unittest.TestCase):
 			order_fulfillment.get_order(47375)
 
 		mock_get_order.assert_called_once_with(47375)
+
+	def test_attaches_customer_from_lookup(self):
+		with patch.object(woo_client, "get_order", return_value=sample_row()):
+			with patch.object(
+				customer_lookup,
+				"resolve_customer",
+				return_value={"id": "CUST-00001", "name": "ABC Construction"},
+			):
+				result = order_fulfillment.get_order(47375)
+
+		self.assertEqual(
+			result["order"]["customer"],
+			{"id": "CUST-00001", "name": "ABC Construction"},
+		)
+
+	def test_passes_order_id_to_customer_lookup(self):
+		with patch.object(woo_client, "get_order", return_value=sample_row()):
+			with patch.object(customer_lookup, "resolve_customer", return_value=None) as mock_resolve:
+				order_fulfillment.get_order(47375)
+
+		mock_resolve.assert_called_once_with(47375)
+
+	def test_missing_customer_keeps_order(self):
+		with patch.object(woo_client, "get_order", return_value=sample_row()):
+			result = order_fulfillment.get_order(47375)
+
+		self.assertIsNone(result["order"]["customer"])
+		self.assertEqual(result["order"]["order_id"], 47375)
 
 
 class TestErrorMapping(unittest.TestCase):

@@ -83,18 +83,21 @@ def _handle_response(response):
 
 
 def _extract_order_list(response_data):
-	if isinstance(response_data, list):
-		return response_data
+    if isinstance(response_data, list):
+        return response_data
 
-	if isinstance(response_data, dict):
-		for key in ("orders", "data", "results"):
-			value = response_data.get(key)
-			if isinstance(value, list):
-				return value
+    print("response_data", response_data)
 
-		raise WooCommerceInvalidResponseError("WooCommerce returned an unexpected response structure.")
+    if isinstance(response_data, dict):
+        for key in ("orders", "data", "results", "rows"):
+            value = response_data.get(key)
 
-	raise WooCommerceInvalidResponseError("WooCommerce returned an unexpected response structure.")
+            if isinstance(value, list):
+                return value
+
+    raise WooCommerceInvalidResponseError(
+        "WooCommerce returned an unexpected response structure."
+    )
 
 
 def _build_url(settings):
